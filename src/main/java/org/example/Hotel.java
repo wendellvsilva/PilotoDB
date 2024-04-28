@@ -1,5 +1,6 @@
 package org.example;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +17,11 @@ public class Hotel {
         quartos.add(quarto);
     }
 
-    public void removerQuarto(Quarto quarto) {
-        quartos.remove(quarto);
-    }
 
-    public boolean verificarDisponibilidade(int numeroQuarto, String data) {
+    public boolean verificarDisponibilidade(int numeroQuarto, LocalDateTime dataInicio, LocalDateTime dataFim) {
         for (Reserva reserva : reservas) {
-            if (reserva.getNumeroQuarto() == numeroQuarto && reserva.getData().equals(data)) {
+            if (reserva.getNumeroQuarto() == numeroQuarto &&
+                    !(dataFim.isBefore(reserva.getDataInicio()) || dataInicio.isAfter(reserva.getDataFim()))) {
                 return false;
             }
         }
@@ -30,32 +29,38 @@ public class Hotel {
     }
 
     public boolean adicionarReserva(Reserva reserva) {
-        if (verificarDisponibilidade(reserva.getNumeroQuarto(), reserva.getData())) {
-            reservas.add(reserva);
+        int numeroQuarto = reserva.getNumeroQuarto();
+        LocalDateTime dataInicio = reserva.getDataInicio();
+        LocalDateTime dataFim = reserva.getDataFim();
+
+        if (!verificarDisponibilidade(numeroQuarto, dataInicio, dataFim)) {
+            return false;
+        }
+
+        reservas.add(reserva);
+        return true;
+    }
+
+    public boolean cancelarReserva(int idReserva) {
+        Reserva reservaParaRemover = null;
+        for (Reserva reserva : reservas) {
+            if (reserva.getId() == idReserva) {
+                reservaParaRemover = reserva;
+                break;
+            }
+        }
+
+        if (reservaParaRemover != null) {
+            reservas.remove(reservaParaRemover);
             for (Quarto quarto : quartos) {
-                if (quarto.getId() == reserva.getNumeroQuarto()) {
-                    quarto.setOcupado(true);
+                if (quarto.getId() == reservaParaRemover.getNumeroQuarto()) {
+                    quarto.setOcupado(false);
                     break;
                 }
             }
             return true;
         }
-        return false;
-    }
 
-    public boolean cancelarReserva(int idReserva) {
-        for (Reserva reserva : reservas) {
-            if (reserva.getId() == idReserva) {
-                reservas.remove(reserva);
-                for (Quarto quarto : quartos) {
-                    if (quarto.getId() == reserva.getNumeroQuarto()) {
-                        quarto.setOcupado(false);
-                        break;
-                    }
-                }
-                return true;
-            }
-        }
         return false;
     }
 }
