@@ -16,7 +16,6 @@ public class HotelTest {
     @BeforeEach
     public void setUp() {
         hotel = new Hotel();
-        quarto = new Quarto(1);
     }
 
     @Test

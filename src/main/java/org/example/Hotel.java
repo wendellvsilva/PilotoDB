@@ -49,12 +49,10 @@ public class Hotel {
                 break;
             }
         }
-
         if (reservaParaRemover != null) {
             reservas.remove(reservaParaRemover);
             for (Quarto quarto : quartos) {
                 if (quarto.getId() == reservaParaRemover.getNumeroQuarto()) {
-                    quarto.setOcupado(false);
                     break;
                 }
             }

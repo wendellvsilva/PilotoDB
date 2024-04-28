@@ -39,8 +39,9 @@ public class Reserva {
     }
 
     public static void main(String[] args) {
-        Reserva reserva = new Reserva(1, 101, LocalDateTime.of(2024, 4, 25, 12, 0), LocalDateTime.of(2024, 4, 30, 12, 0));
-        LocalDateTime dataVerificar = LocalDateTime.of(2024, 4, 30, 15, 0);
+        Reserva reserva = new Reserva(1, 101, LocalDateTime.of(2024, 4, 25, 12, 0),
+                LocalDateTime.of(2024, 4, 30, 16, 0));
+        LocalDateTime dataVerificar = LocalDateTime.of(2024, 4, 30, 18, 0);
         if (reserva.estaOcupado(dataVerificar, reserva.getDataFim())) {
             System.out.println("O quarto está ocupado nessa hora/data.");
         } else {
